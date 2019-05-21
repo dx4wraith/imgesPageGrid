@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>图片分页展示</title>
+    <meta charset="utf-8"/>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <link href="css/imgDataGrid.css" rel="stylesheet"/>
+    <script src="js/imgDataGrid.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body style="padding:10px">
+
+<input type="button" value="全选" onclick="setAll();" />
+<input type="button" value="全不选" onclick="setNone();" />
+<input type="button" value="反选" onclick="setBack();" /><br>
+<div id="imgDataGrid" style="margin:0 auto;">
+</div>
+<script src="dist/zoomify.min.js"></script>
+<script >
+    $(document).ready(function () {
+            cmsImgLocalSearch();
+
+        }
+    )
+
+    //本地分页加载
+    function cmsImgLocalSearch() {
+        var data = {
+            "page": 1,//当前页码
+            "records": 9,//总条数
+            "rows": [{"Id": 1, "materialThumUriPath": "img/1.jpg"},
+                {"Id": 2, "materialThumUriPath": "img/2.jpg"},
+                {"Id": 3, "materialThumUriPath": "img/3.jpg"},
+                {"Id": 4, "materialThumUriPath": "img/4.jpg"},
+                {"Id": 5, "materialThumUriPath": "img/4.jpg"},
+                {"Id": 6, "materialThumUriPath": "img/1.jpg"},
+                {"Id": 7, "materialThumUriPath": "img/1.jpg"},
+                {"Id": 8, "materialThumUriPath": "img/3.jpg"},
+                {"Id": 9, "materialThumUriPath": "img/2.jpg"},
+                {"Id": 10, "materialThumUriPath": "img/3.jpg"},
+                {"Id": 11, "materialThumUriPath": "img/1.jpg"}
+
+            ]
+        };
+        $('#imgDataGrid').imgDataGrid({
+            title: '图片集',
+            type: 'GET',//GET|POST
+            data: data,//本地数据
+            params: {type: 0},//url参数
+            height: '500px',
+            width: '1000px',
+            img: {width: '470px', height: '250px', animate: 'zoomIn'},//图片宽度，及动画效果
+            onClick: function () {//点击图片事件
+
+                $(this).imgbox(
+                    {
+                        'zoomOpacity': true,
+                        'alignment': 'center'
+                    }
+                );
+                //alert(index);
+
+            },
+
+
+            render: function (item, index) {//自定义显示图片
+                var str = '<div id="dd" style="width: auto; height: auto;margin:auto;">' +
+                        '<input type="checkbox" name="nn">'+
+                    '<img  id="'+index+'" src="' + item.materialThumUriPath +
+                    '"class="img_material"></div ><div style="width: 30px; height: 30px;word-wrap: break-word;margin:0 auto;text-align: center;">'
+                    + item.Id + '</div>';
+                return str;
+            }
+        });
+    }
+    function setAll() {
+        var a=document.getElementsByName("nn");//先获取input多选框
+        //获取的a是个数组，遍历这个数组，设置checked属性
+        for(var i=0;i<a.length;i++){
+            a[i].checked=true;//checked为true时是选中，false时是未选中
+        }
+    }
+    function setNone() {
+        var a=document.getElementsByName("nn");
+        for(var i=0;i<a.length;i++){
+            a[i].checked=false;
+        }
+    }
+    function setBack() {
+        var c=document.getElementsByName("nn");
+        for(var i=0;i<c.length;i++){
+            if(c[i].checked==true){
+                c[i].checked=false;
+            }
+            else{
+                c[i].checked=true;
+            }
+        }
+    }
+    function set() {
+        var d=document.getElementById("n2");
+        if(d.checked==true){
+            setAll();//直接调用已有的方法，设置checked属性
+        }
+        else{
+            setNone();
+        }
+    }
+    function newWindow() {
+        // var div = document.getElementsByClassName("img_material");
+        //     alert(index.valueOf())
+        var imgName = document.getElementsByTagName("li")
+
+        // var imgdd = document.getElementById("0")
+        var image = new Image();
+        for(i=0;i<imgName.length;i++){
+            imgName[i].onclick = function(){
+                var imgsrc= document.getElementById(this.id).getElementsByTagName("img")[0].src
+                console.log(document.getElementById(this.id).getElementsByTagName("img")[0].src)
+                image.src =imgsrc
+                var imgWindow = window.open( image.src, "imgWin", "width="+1000+",height="+1000+",scrollbars=no")
+            }
+        }
+
+
+        image.onload = function(){
+
+
+
+        }
+    }
+
+
+
+
+    $(this).click(function(){
+
+        newWindow()
+
+    });
+    //ajax从服务器分页加载	代码不全，仅供参考
+    /*
+    function cmsImgSearch(){
+        var param = $("#cmsImgInfo").serialize();
+        var materialName = $("#materialName").val();
+        var useScene = $("#useScene").val();
+
+            $('#imgDataGrid').imgDataGrid({
+                title: '图片集',
+                type:'POST',//GET|POST
+                async:false,
+                dataType:"json",
+                url: '${rc.contextPath}/article/${systemId}/searchCmsMaterial.json',//url
+                params: { materialName: materialName,useScene:useScene },//url参数
+                height: '400px',
+                width: '1000px',
+                img: { width: '180px',height: '180px', animate: 'zoomIn' },//图片宽度，及动画效果
+                onClick: function (obj,index, item) { //点击图片事件
+                      InsertHTMLPic(item.materialUriPath) ;
+                      $('#showCmsPicModel').modal('hide');
+                },
+                render: function (item, index) {//自定义显示图片
+                    var str = '<div style="width: 100px; height: 100px;margin:0 auto;">'+'<img src="' + item.materialThumUriPath + '"class="img_material"></div ><div style="width: 170px; height: 70px;word-wrap: break-word;margin:0 auto;text-align: center;">'+item.materialName+'</div>';
+                    return str;
+                }
+            });
+    }
+    */
+
+</script >
+
+
+</body>
+
+
+</html>

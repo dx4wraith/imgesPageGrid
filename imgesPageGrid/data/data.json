@@ -1,0 +1,23 @@
+﻿
+{"code":0,         
+"msg":"操作成功", 
+"page":1,     //当前页码
+"records":14, //总记录数
+"rows":[
+{
+"albumId":"ad",
+"createBy":"10566",
+"delFlag":"0",
+"materialFileName":"pic_180808190142_00730.jpg",
+"materialId":750,
+"materialName":"aaaa.xxxx.jpg",
+"materialPath":"D:\\\\data\\\\doc\\\\site\\\\album\\\\system_21\\\\ad\\\\dir112\\\\ad312\\\\pic_180808190142_00730.jpg",
+"materialThumUriPath":"/album/system_21/ad/dir112/ad312/pic_180808190142_00730.jpg_100x100.jpg",
+"materialType":0,
+"materialUriPath":"/album/system_21/ad/dir112/ad312/pic_180808190142_00730.jpg",
+"systemId":21,
+"useScene":0
+},
+{…………}
+"success":true
+}
